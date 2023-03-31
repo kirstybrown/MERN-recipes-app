@@ -36,9 +36,13 @@ const Register = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post("http://127.0.0.1:5173/auth/register");
+            await axios.post("http://127.0.0.1:5173/auth/register", {
+                username,
+                password,
+            });
+            alert("Registration Completed! Now Login.");
         } catch (err) {
-
+            console.log(err);
         }
 
 
@@ -80,7 +84,7 @@ const Form = ({
                 <div className='form-group'>
                     <label htmlFor='password'> Password: </label>
                     <input 
-                        type="text" 
+                        type="password" 
                         id='password'
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
