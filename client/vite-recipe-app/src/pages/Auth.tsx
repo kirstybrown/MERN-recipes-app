@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -31,8 +30,6 @@ const Login = () => {
                 username,
                 password,
             });
-
-            console.log(response.data);
             
             if ((response.data.message == "User doesn't exist...Please register!") ||
                 (response.data.message == "Username or Password is incorrect!")) {
