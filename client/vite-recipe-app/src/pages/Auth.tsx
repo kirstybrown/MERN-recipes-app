@@ -32,13 +32,20 @@ const Login = () => {
                 password,
             });
 
-
-            setCookies("access_token", response.data.token);
-            window.localStorage.setItem("userID", response.data.userID);
-            navigate("/");
+            console.log(response.data);
+            
+            if ((response.data.message == "User doesn't exist...Please register!") ||
+                (response.data.message == "Username or Password is incorrect!")) {
+                alert(response.data.message);
+          
+            } else {
+                setCookies("access_token", response.data.token);
+                window.localStorage.setItem("userID", response.data.userID);
+                navigate("/");
+            }
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -67,7 +74,7 @@ const Register = () => {
             });
             alert("Registration Completed! Now Login.");
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
 
 
