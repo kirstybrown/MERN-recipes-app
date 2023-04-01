@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from "axios";
 import { Recipe } from '../types/Recipe';
 import { useGetUserId } from '../hooks/useGetUserId';
+import { useCookies } from 'react-cookie';
 
 export interface IHomeProps {
 }
@@ -10,6 +11,8 @@ export default function Home (props: IHomeProps) {
 
   const [recipes, setRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([{}]);
+  const [cookies, ] = useCookies(["access_token"]);
+
   const userId = useGetUserId();
 
   useEffect(() => {
@@ -35,7 +38,11 @@ export default function Home (props: IHomeProps) {
     };
 
     fetchRecipe();
-    fetchSavedRecipes();
+
+    if (cookies.access_token) {
+      fetchSavedRecipes();
+    }
+
   }, []);
 
   const saveRecipe = async (recipeId: number) => {
@@ -44,7 +51,7 @@ export default function Home (props: IHomeProps) {
       const response = await axios.put("http://localhost:3001/recipes", {
         recipeId,
         userId,
-      });
+      }, {headers: {authorization: cookies.access_token}});
       setSavedRecipes(response.data.savedRecipes);
     } catch (error) {
       console.error(error);
