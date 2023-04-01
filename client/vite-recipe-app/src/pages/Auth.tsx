@@ -3,10 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export interface IAuthProps {
-}
-
-export default function Auth (props: IAuthProps) {
+export default function Auth () {
   return (
     <div className='auth'>
       <Login />

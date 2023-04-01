@@ -4,10 +4,7 @@ import { Recipe } from '../types/Recipe';
 import { useGetUserId } from '../hooks/useGetUserId';
 import { useCookies } from 'react-cookie';
 
-export interface IHomeProps {
-}
-
-export default function Home (props: IHomeProps) {
+export default function Home () {
 
   const [recipes, setRecipes] = useState([]);
   const [savedRecipes, setSavedRecipes] = useState([{}]);
