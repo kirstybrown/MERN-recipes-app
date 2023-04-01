@@ -9,6 +9,7 @@ export interface IHomeProps {
 export default function Home (props: IHomeProps) {
 
   const [recipes, setRecipes] = useState([]);
+  const [savedRecipes, setSavedRecipes] = useState([{}]);
   const userId = useGetUserId();
 
   useEffect(() => {
@@ -19,11 +20,22 @@ export default function Home (props: IHomeProps) {
         setRecipes(response.data);        
       } catch (error) {
         console.error(error);
-        
       }
-    }
+    };
 
-    fetchRecipe()
+    const fetchSavedRecipes = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/recipes/savedRecipes/ids/${userId}`
+        );
+        setSavedRecipes(response.data.savedRecipes);              
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchRecipe();
+    fetchSavedRecipes();
   }, []);
 
   const saveRecipe = async (recipeId: number) => {
@@ -33,13 +45,13 @@ export default function Home (props: IHomeProps) {
         recipeId,
         userId,
       });
-      console.log(response);
-      
+      setSavedRecipes(response.data.savedRecipes);
     } catch (error) {
       console.error(error);
-      
     }
   }
+
+  const isRecipeSaved = (id: number) => savedRecipes.includes(id);
 
   return (
     <div>
@@ -49,7 +61,12 @@ export default function Home (props: IHomeProps) {
           <li key={recipe._id}>
             <div>
               <h2>{recipe.name}</h2>
-              <button onClick={() => saveRecipe(recipe._id)}>Save Recipe</button>
+              <button 
+                onClick={() => saveRecipe(recipe._id)}
+                disabled={isRecipeSaved(recipe._id)}  
+              >
+                {isRecipeSaved(recipe._id) ? "Saved" : "Save"}
+              </button>
             </div>
             <div className='instructions'>
               <p>{recipe.instructions}</p>

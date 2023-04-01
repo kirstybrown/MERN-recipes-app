@@ -36,15 +36,17 @@ router.put("/", async (req, res) => {
     }
 });
 
-router.get("/saved-recipes/ids", async (req, res) => {
+router.get("/savedRecipes/ids/:userId", async (req, res) => {
     try {
-        const user = await UserModel.findById(req.body.userId);
+        const user = await UserModel.findById(req.params.userId);
+        console.log(user);
         res.json({savedRecipes: user?.savedRecipes});
     } catch (error) {
         res.json(error);
     }
-})
-router.get("/saved-recipes", async (req, res) => {
+});
+
+router.get("/savedRecipes", async (req, res) => {
     try {
         const user = await UserModel.findById(req.body.userId);
         const savedRecipes = await RecipeModel.find({

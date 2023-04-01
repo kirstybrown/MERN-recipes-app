@@ -40,12 +40,17 @@ export default function CreateRecipe () {
   const onSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:3001/recipes", recipe);
-      alert("Recipe Created!");
-      navigate("/");
+      const response = await axios.post("http://localhost:3001/recipes", recipe);
+
+      if (response.data.errors) {
+        alert("Please complete all fields!");
+      } else {
+        alert("Recipe Created!");
+        navigate("/");
+      }      
+      
     } catch (error) {
       console.error(error);
-      
     }
   }
 
