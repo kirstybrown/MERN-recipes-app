@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export interface IAuthProps {
@@ -18,6 +20,28 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const [_, setCookies] = useCookies(["access_token"]);
+
+    const navigate = useNavigate();
+
+    const onSubmit = async (event: { preventDefault: () => void; }) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:3001/auth/login", {
+                username,
+                password,
+            });
+
+
+            setCookies("access_token", response.data.token);
+            window.localStorage.setItem("userID", response.data.userID);
+            navigate("/");
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Form 
             username={username}
@@ -25,6 +49,7 @@ const Login = () => {
             password={password}
             setPassword={setPassword}
             label="Login"
+            onSubmit={onSubmit}
         />
     )
 };
@@ -33,7 +58,7 @@ const Register = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const onSubmit = async (event) => {
+    const onSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         try {
             await axios.post("http://localhost:3001/auth/register", {
